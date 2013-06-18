@@ -2,6 +2,7 @@
     "key": "bafindealings",
     "label": "BaFin Directors Dealings",
     "url": "http://ww2.bafin.de/database/DealingsInfo/sucheForm.do",
+    "editors": [1, 2],
     "events": [{
         "key": "notice",
         "label": "Directors Dealings Notice",
