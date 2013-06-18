@@ -5,11 +5,9 @@ from pprint import pprint
 from lxml import html
 import csv
 
-from common import dealings, normalize_key
+from common import URL, dealings, normalize_key
 
 log = logging.getLogger(__name__)
-
-URL = 'http://ww2.bafin.de/database/DealingsInfo/sucheForm.do'
 
 QUERY = {
     'emittentIsin': '',
@@ -35,8 +33,7 @@ def scrape():
             if 'DOCTYPE' in k:
                 return
             data[normalize_key(k)] = v.decode('latin-1')
-        dealings.upsert(data, ['BaFin_ID'])
-        #stringer.submit(data)
+        dealings.upsert(data, ['BaFin_ID', 'Meldungsnr'])
 
 if __name__ == '__main__':
     scrape()

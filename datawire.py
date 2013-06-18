@@ -1,17 +1,28 @@
 from datastringer import DataStringer
-from common import dealings
+from datetime import datetime
+from common import URL, dealings
 import urllib
 
 
+def date(row):
+    try:
+        data = row.get('Veroffentlichungsdatum')
+        return datetime.strptime(data, '%d.%m.%Y')
+    except:
+        return
+
+
 def submit_all():
-    stringer = DataStringer(host='http://localhost:5000', service='foerderkatalog', event='project')
-    for row in list(dealings.find(datawire_submitted=False)):
+    stringer = DataStringer(service='bafindealings', event='notice')
+    for row in list(dealings.find()):
         if 'datawire_submitted' in row:
+            if row['datawire_submitted']:
+                continue
             del row['datawire_submitted']
-        row['source_url'] = URL_BASE % urllib.quote_plus(row['fkz'])
-        stringer.submit(row)
-        upd = {'datawire_submitted': True, 'fkz': row['fkz']}
-        dealings.update(upd, ['fkz'])
+            #continue
+        stringer.submit(row, source_url=URL, action_at=date(row))
+        upd = {'datawire_submitted': True, 'BaFin_ID': row['BaFin_ID'], 'Meldungsnr': row['Meldungsnr']}
+        dealings.update(upd, ['BaFin_ID', 'Meldungsnr'])
 
 
 if __name__ == '__main__':

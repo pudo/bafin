@@ -3,6 +3,8 @@ import dataset
 import logging
 import unicodedata
 
+URL = 'https://portal.mvp.bafin.de/database/DealingsInfo/sucheForm.do'
+
 database_url = os.environ.get('DATABASE_URL')
 engine = dataset.connect(database_url)
 dealings = engine.get_table('dealings')
