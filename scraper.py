@@ -1,14 +1,13 @@
-import logging
 import requests
 from urlparse import urljoin
 from pprint import pprint
 from lxml import html
 import csv
+from normality import slugify
 
-from common import URL, dealings, normalize_key
+import dataset
 
-log = logging.getLogger(__name__)
-
+URL = 'https://portal.mvp.bafin.de/database/DealingsInfo/sucheForm.do'
 QUERY = {
     'emittentIsin': '',
     'emittentName': '',
@@ -18,6 +17,9 @@ QUERY = {
     'zeitraumVon': '',
     'zeitraumBis': ''
 }
+
+engine = dataset.connect('sqlite:///data.sqlite')
+dealings = engine.get_table('data')
 
 
 def scrape():
@@ -32,8 +34,10 @@ def scrape():
                 continue
             if 'DOCTYPE' in k:
                 return
-            data[normalize_key(k)] = v.decode('latin-1')
-        dealings.upsert(data, ['BaFin_ID', 'Meldungsnr'])
+            k = k.decode('latin-1')
+            k = slugify(k, sep='_')
+            data[k] = v.decode('latin-1')
+        dealings.upsert(data, ['bafin_id', 'meldungsnr'])
 
 if __name__ == '__main__':
     scrape()
