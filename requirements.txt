@@ -1,4 +1,4 @@
-dataset
+dataset==0.5.6
 requests
 lxml
-psycopg2
+normality==0.2.2
