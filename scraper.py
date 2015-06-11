@@ -24,9 +24,9 @@ dealings = engine.get_table('data')
 
 def scrape():
     session = requests.Session()
-    res = session.post(URL, data=QUERY)
+    res = session.post(URL, data=QUERY, verify=False)
     a = html.fromstring(res.content).find('.//div[@class="exportlinks"]//a')
-    res = session.get(urljoin(URL, a.get('href')))
+    res = session.get(urljoin(URL, a.get('href')), verify=False)
     for row in csv.DictReader(res.iter_lines(), delimiter=';'):
         data = {}
         for k, v in row.items():
