@@ -1,3 +1,4 @@
+import os
 import requests
 from urlparse import urljoin
 from pprint import pprint
@@ -18,8 +19,9 @@ QUERY = {
     'zeitraumBis': ''
 }
 
-engine = dataset.connect('sqlite:///data.sqlite')
-dealings = engine.get_table('data')
+db = os.environ.get('DATABASE_URI', 'sqlite:///data.sqlite')
+engine = dataset.connect(db)
+dealings = engine.get_table('de_bafin_directors_dealings')
 
 
 def scrape():
